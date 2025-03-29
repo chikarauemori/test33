@@ -4,38 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LIFF Stripe Checkout</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      rossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css"
-    />
   </head>
   <body>
-    <form class="w-75 mx-auto"></form>
+    <form
+      id="userForm"
+      action="https://script.google.com/macros/s/AKfycbyycGVTeU3Fs7G_E2B7IqJDaiG72wa50cFn2gZVlD5ZVMebua7i568Qf7ZruyrkBIferg/exec"
+      method="post"
+    >
+      <!-- ユーザーIDは動的に追加されます -->
+      <button type="submit">ログイン</button>
+    </form>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-      crossorigin="anonymous"
-    ></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
       liff
         .init({
-          liffId: "2007108080-XQE6YNRM",
+          liffId: "2007108080-XQE6YNRM", // あなたのLIFF ID
         })
         .catch((err) => {
           console.log(err);
@@ -51,24 +35,23 @@
           .getProfile()
           .then((profile) => {
             const userId = profile.userId; // ユーザーIDを取得
-            $("form").append(
-              `<input type="hidden" name="userId" value="${userId}">`
-            );
-            $("form").append(
-              `<input type="submit" class="mt-4 btn btn-primary" value="送信">`
-            );
+
+            // ユーザーIDを非表示のinputフィールドとしてフォームに追加
+            const userIdField = document.createElement("input");
+            userIdField.type = "hidden"; // 見えないフィールドとして設定
+            userIdField.name = "userId"; // サーバー側で受け取る名前を指定
+            userIdField.value = userId; // ユーザーIDの値をセット
+
+            // フォームにuserIdフィールドを追加
+            document.getElementById("userForm").appendChild(userIdField);
+
+            // 必要に応じてボタンのテキストを変更する
+            const submitButton = document.querySelector("button");
+            submitButton.textContent = "スタンプラリーカード";
           })
           .catch((err) => {
-            console.log("Error getting profile: ", err);
+            console.log("プロフィール取得エラー: ", err);
           });
-      });
-
-      $("form").submit(function (event) {
-        event.preventDefault();
-        $.post(
-          "https://script.google.com/macros/s/AKfycbyycGVTeU3Fs7G_E2B7IqJDaiG72wa50cFn2gZVlD5ZVMebua7i568Qf7ZruyrkBIferg/exec",
-          $("form").serialize()
-        );
       });
     </script>
   </body>
